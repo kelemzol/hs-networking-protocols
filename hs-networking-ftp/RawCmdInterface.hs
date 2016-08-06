@@ -2,11 +2,12 @@
 {-# LANGUAGE TypeFamilies
            , KindSignatures
            , MultiParamTypeClasses
+           , StandaloneDeriving
            #-}
 
 module Network.Ftp.RawCmdInterface where
 
-class (Monad m) => FtpRawCmdInterface (m :: * -> *) string number printable where
+class FtpRawCmdInterface (m :: * -> *) string number printable where
     type FtpResult m
     userName            :: string -> m (FtpResult m)
     password            :: string -> m (FtpResult m)
@@ -63,6 +64,15 @@ data StructureCode = File | Record | Page
 
 data ModeCode = Stream | Block | Compressed
   deriving (Eq, Ord, Show)
+
+
+
+newtype FtpRawCmdLiftedInterfaceT m a = FtpRawCmdLiftedInterfaceT (m a)
+  deriving (Eq, Ord, Show)
+
+--instance (Monad m) => FtpRawCmdInterface (FtpRawCmdLiftedInterfaceT m) String Int String
+
+
 
 
 
