@@ -1,13 +1,18 @@
 
-module Network.Ftp.RawInterface where
+{-# LANGUAGE TypeFamilies
+           , KindSignatures
+           , MultiParamTypeClasses
+           #-}
 
-class (Monad m) => FtpRawInterface (m :: * -> *) string number printable where
+module Network.Ftp.RawCmdInterface where
+
+class (Monad m) => FtpRawCmdInterface (m :: * -> *) string number printable where
     type FtpResult m
     userName            :: string -> m (FtpResult m)
     password            :: string -> m (FtpResult m)
     account             :: string -> m (FtpResult m)
     changeWorkingDir    :: string -> m (FtpResult m)
-    changeParentDir     :: m (FtpResult m)
+    changeToParentDir   :: m (FtpResult m)
     structureMount      :: string -> m (FtpResult m)
     quit                :: m (FtpResult m)
     reinitialize        :: m (FtpResult m)
@@ -37,7 +42,7 @@ class (Monad m) => FtpRawInterface (m :: * -> *) string number printable where
     help                :: string -> m (FtpResult m)
     noop                :: m (FtpResult m)
 
-data HostPort
+data HostPort number
   = HostPort { hostNumber :: (number, number, number, number)
              , portNumber :: (number, number)
              }
